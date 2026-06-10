@@ -115,7 +115,23 @@ jobs:
                 #platformType: # optional, default is CLOUD
                 # Enable ESD (Extended Static Analysis) mode. Takes true or false
                 esd: true # optional
-                      
+
+            - name: Veracode Static Analysis Pipeline Scan and SARIF import
+              # You may pin to the exact commit or the version.
+              # uses: veracode/veracode-pipeline-scan-results-to-sarif@a968aed9d556a0af204bf6dc7f8f1884e19839bc
+              uses: veracode/veracode-pipeline-scan-results-to-sarif@v2.0.5
+              with:
+                  results-json: filtered_results.json
+                  output-results-sarif: veracode-results.sarif
+                  #source-base-path-1: "^com/:src/main/java/com/"
+                  #source-base-path-2: "^WEB-INF:src/main/webapp/WEB-INF"
+                  #output-results-sarif: veracode-results.sarif
+                  repo_owner: ${{ github.repository_owner }}
+                  repo_name: ${{ github.repository }}
+                  commitSHA: 4b6472266afd7b471e86085a6659e8c7f2b119da
+                  #ref: refs/heads/master
+                  githubToken: ${{ github.token }}
+                    
             -   name: "Set up QEMU"
                 if: runner.os == 'Linux'
                 uses: docker/setup-qemu-action@v2.2.0
