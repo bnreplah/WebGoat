@@ -12,7 +12,7 @@ on:
       - '.mvn/**'
   
 env:
-  SRCCLR_API_TOKEN: ${{secrets.SRCCLR_API_TOKEN}}
+  SRCCLR_API_TOKEN: ${{secrets.SRCCLR_AGENT_TOKEN}}
   #SRCCLR_SCM_URI: https://github.com/bnreplah/webgoat
   #SRCCLR_SCM_SUB_PATH: /app
 
