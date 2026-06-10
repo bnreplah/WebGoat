@@ -1,6 +1,7 @@
 name: SCA Verademo Maven Build [Single Job]
 
 on:
+  workflow_dispatch: 
   push:
     paths:
       - 'pom.xml'
