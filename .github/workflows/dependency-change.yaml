@@ -87,5 +87,5 @@ jobs:
           # Run the SRCCLR with the `--recursive` option
           recursive: true # optional, default is false
         env:
-          SRCCLR_AGENT_TOKEN: ${{ secrets.SRCCLR_AGENT_TOKEN }}
+          SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_AGENT_TOKEN }}
          
