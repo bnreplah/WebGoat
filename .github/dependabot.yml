@@ -12,7 +12,7 @@ updates:
         directory: "/"
         schedule:
             interval: "weekly"
-     -   package-ecosystem: "veracode"
+    -   package-ecosystem: "veracode"
         directory: "/workflows/"
         schedule:
             interval: "weekly"
