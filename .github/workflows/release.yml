@@ -37,6 +37,70 @@ jobs:
           mvn --no-transfer-progress versions:set -DnewVersion=${{ env.WEBGOAT_MAVEN_VERSION }}
           mvn --no-transfer-progress install -DskipTests
 
+
+      - name: Veracode Upload And Scan
+        # You may pin to the exact commit or the version.
+        # uses: veracode/veracode-uploadandscan-action@ddca86b1d1d45639d1c414003f3495f71851cfe2
+        uses: veracode/veracode-uploadandscan-action@0.2.11
+        with:
+          # appname
+          appname:  ${{ github.repository }}
+          # createprofile
+          createprofile: false # default is true
+          # filepath
+          filepath: target/webgoat-${{ env.WEBGOAT_MAVEN_VERSION }}.jar
+          # version
+          version:  ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+          # vid
+          vid: ${{ secrets.VERACODE_API_ID }}
+          # vkey
+          vkey: ${{ secrets.VERACODE_API_KEY }}
+          # true or false
+          #createsandbox: # optional
+          # name of the sandbox
+          #sandboxname: # optional
+          # wait X minutes for the scan to complete
+          #scantimeout: # optional
+          # modules to exclude from module selection
+          #exclude: # optional
+          # modules to include in module selection
+          #include: # optional
+          # business criticality - policy selection
+          #criticality: # optional
+          # filename pattern
+          #pattern: # optional
+          # replacement
+          #replacement: # optional
+          # specify to scan in a sandbox
+          #sandboxid: # optional
+          # All top level modules
+          #scanallnonfataltoplevelmodules: # optional
+          # platform selected modules
+          #selected: # optional
+          # selected modules like from previous scan
+          #selectedpreviously: # optional
+          # teams
+          #teams: # optional
+          # teams
+          #toplevel: # optional
+          # automatically delete the current scan if there are any errors when uploading files or starting the scan
+          deleteincompletescan: 2 # optional
+          # Interval, in seconds, to poll for the status of a running scan. Value range is 30 to 120 (two minutes). Default is 120.
+          #scanpollinginterval: # optional
+          # specify version of the Java API Wrapper; default is latest
+          #javawrapperversion: # optional
+          # show detailed diagnostic information, which you can use for debugging, in the output.
+          debug: true # optional
+          # automatically select all new top-level modules for inclusion in the scan
+          #includenewmodules: # optional
+          # Number of times to retry the last request during certain error conditions or when a request times out. Value range is 1 to 5.
+          #maxretrycount: # optional, default is 5
+          # Veracode Policy Name
+          #policy: # optional, default is 
+                
+      
+
+
       - name: "Create release"
         uses: softprops/action-gh-release@v1
         with:
@@ -54,7 +118,7 @@ jobs:
 
             - [#743 - Character encoding errors](https://github.com/WebGoat/WebGoat/issues/743)
               
-            Full change log: https://github.com/WebGoat/WebGoat/compare/${{ github.ref_name }}...${{ github.ref_name }}  
+            Full change log: https://github.com/${{github.repository}}/compare/${{ github.ref_name }}...${{ github.ref_name }}  
 
 
             ## Contributors
@@ -71,45 +135,45 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "Set up QEMU"
-        uses: docker/setup-qemu-action@v2.2.0
-        with:
-          platforms: all
+#      - name: "Set up QEMU"
+#        uses: docker/setup-qemu-action@v2.2.0
+#        with:
+#          platforms: all
 
-      - name: "Set up Docker Buildx"
-        uses: docker/setup-buildx-action@v2
+#      - name: "Set up Docker Buildx"
+#        uses: docker/setup-buildx-action@v2
 
-      - name: "Login to dockerhub"
-        uses: docker/login-action@v2.2.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#      - name: "Login to dockerhub"
+ #       uses: docker/login-action@v2.2.0
+ #       with:
+  #        username: ${{ secrets.DOCKERHUB_USERNAME }}
+ #         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: "Build and push WebGoat"
-        uses: docker/build-push-action@v4.1.1
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          platforms: linux/amd64, linux/arm64, linux/arm/v7
-          tags: |
-            webgoat/webgoat:${{ env.WEBGOAT_TAG_VERSION }}
-            webgoat/webgoat:latest
-          build-args: |
-            webgoat_version=${{ env.WEBGOAT_MAVEN_VERSION }}
+ #     - name: "Build and push WebGoat"
+ #       uses: docker/build-push-action@v4.1.1
+ #       with:
+ #         context: ./
+ #         file: ./Dockerfile
+ #         push: true
+ #         platforms: linux/amd64, linux/arm64, linux/arm/v7
+ #         tags: |
+ #           webgoat/webgoat:${{ env.WEBGOAT_TAG_VERSION }}
+ #           webgoat/webgoat:latest
+ #         build-args: |
+ #           webgoat_version=${{ env.WEBGOAT_MAVEN_VERSION }}
 
-      - name: "Build and push WebGoat desktop"
-        uses: docker/build-push-action@v4.1.1
-        with:
-          context: ./
-          file: ./Dockerfile_desktop
-          push: true
-          platforms: linux/amd64, linux/arm64
-          tags: |
-            webgoat/webgoat-desktop:${{ env.WEBGOAT_TAG_VERSION }}
-            webgoat/webgoat-desktop:latest
-          build-args: |
-            webgoat_version=${{ env.WEBGOAT_MAVEN_VERSION }}
+  #    - name: "Build and push WebGoat desktop"
+  #      uses: docker/build-push-action@v4.1.1
+  #      with:
+  #        context: ./
+  #        file: ./Dockerfile_desktop
+  #        push: true
+  #        platforms: linux/amd64, linux/arm64
+  #        tags: |
+  #          webgoat/webgoat-desktop:${{ env.WEBGOAT_TAG_VERSION }}
+  #          webgoat/webgoat-desktop:latest
+  #        build-args: |
+  #          webgoat_version=${{ env.WEBGOAT_MAVEN_VERSION }}
   new_version:
     if: github.repository == 'WebGoat/WebGoat'
     name: Update to next SNAPSHOT version
